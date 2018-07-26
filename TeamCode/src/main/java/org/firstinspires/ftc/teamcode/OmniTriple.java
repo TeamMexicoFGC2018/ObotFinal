@@ -64,37 +64,63 @@ public class OmniTriple extends OpMode {
     public void start() {
         runtime.reset();
     }
-
+    
+    public static double controlP(double pAct, double des) {
+      double dif = Math.abs(des - pAct);
+      if (dif > 0.3) {
+        if (des > pAct) {
+          pAct += 0.1;
+        } else if (des < pAct) {
+          pAct -= 0.1;
+        }
+      }  else {
+        pAct = des;
+      }
+      return Range.clip(pAct, -1, +1);
+    }
+    
     //Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-
+    double tiempo = 0;
+    double leftPower = 0;
+    double rightPower = 0;
+    double centrePower = 0;
+    double leftVel = 0;
+    double rightVel = 0;
+    double centreVel = 0;
+    
     @Override
     public void loop() {
-        double leftPower;
-        double rightPower;
-        double centrePower;
+        double tiempoActual = runtime.milliseconds();
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         double drive = -gamepad1.left_stick_y;
         double turn  =  gamepad1.left_stick_x;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0);
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0);
-        centrePower = gamepad1.right_stick_x;
-
-        // Tank Mode uses one stick to control each wheel.
-        /*leftPower = -gamepad1.left_stick_y;
-        rightPower = -gamepad1.left_stick_x ;*/
-
-        // Control power of wheels.
-        if (gamepad1.right_trigger>0) {
-          leftPower = leftPower * 0.75;
-          rightPower = rightPower * 0.75;
-          centrePower = centrePower * 0.75;
-        } else if(gamepad1.left_trigger>0){
-          leftPower = leftPower * 0.5 + leftPower * 0.5*(1-gamepad1.left_trigger);
-          rightPower = rightPower * 0.5 + rightPower * 0.5*(1-gamepad1.left_trigger);
-          centrePower = centrePower * 0.5 + centrePower * 0.5*(1-gamepad1.left_trigger);
+        leftDeseado    = Range.clip(drive + turn, -1.0, 1.0);
+        rightDeseado   = Range.clip(drive - turn, -1.0, 1.0);
+        centreDeseado = gamepad1.right_stick_x;
+        
+        //Acceleration control
+        if (tiempoActual >= tiempo + 40) {
+          leftVel = controlP(leftVel,leftDeseado);
+          rightVel = controlP(rightVel,rightDeseado);
+          centreVel = controlP(centreVel, centreDeseado);
+          tiempo = tiempoActual;
         }
 
+        // Control power of wheels.
+        if (gamepad1.right_trigger > 0) {
+          leftPower = leftVel * 0.75;
+          rightPower = rightVel * 0.75;
+          centrePower = centreVel * 0.75;
+        } else if(gamepad1.left_trigger > 0){
+          leftPower = leftVel * 0.25 + leftVel * 0.5 * (1 - gamepad1.left_trigger);
+          rightPower = rightVel * 0.25 + rightVel * 0.5 * (1 - gamepad1.left_trigger);
+          centrePower = centreVel * 0.25 + centreVel * 0.5 * (1 - gamepad1.left_trigger);
+        } else {
+          leftPower = leftVel;
+          rightPower = rightVel;
+          centrePower = centreVel;
+        }
 
         // Send calculated power to wheels
         robot.leftDrive.setPower(leftPower);
@@ -135,7 +161,6 @@ public class OmniTriple extends OpMode {
             robot.elevador.setPower(0);
         }
 
-
         //La parte cool del morro este, Santi
         if (gamepad2.a){
             robot.grip.setPosition(0);
@@ -160,13 +185,8 @@ public class OmniTriple extends OpMode {
         }
         // bye bye Santi.
 
-
-
-
-
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%f), right (%f)", leftPower, rightPower);
     }
 
     //Code to run ONCE after the driver hits STOP
