@@ -1,4 +1,4 @@
-#Mon May 07 11:36:09 EDT 2018
-base.0=C\:\\Users\\shager\\FG_2018_Public\\first_global_sdk\\app\\ftc_app\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+#Thu Jul 26 16:03:41 MDT 2018
+base.0=C\:\\Users\\cordilleras\\Desktop\\botrregos\\codigo\\fist Global\\ObotFinal\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 path.0=classes.dex
 renamed.0=classes.dex
