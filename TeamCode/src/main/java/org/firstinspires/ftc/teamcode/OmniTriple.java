@@ -31,18 +31,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-@TeleOp(name="Herman", group="Teleop")
+@TeleOp(name="Herman", group="Iterative Opmode")
 //@Disabled
 public class OmniTriple extends OpMode {
 
-    HardwareObot robot       = new HardwareObot(); // use the class created to define a Pushbot's hardware
+    Hardwarebot robot       = new Hardwarebot(); // use the class created to define a Pushbot's hardware
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -50,9 +47,15 @@ public class OmniTriple extends OpMode {
     //Code to run ONCE when the driver hits INIT
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
+        /* Initialize the hardware variables.
+         * The init() method of the hardware class does all the work here
+         */
+        robot.init(hardwareMap);
 
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Say", "Hello Driver");    //
     }
+
 
     //Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
     @Override
@@ -146,7 +149,7 @@ public class OmniTriple extends OpMode {
         if (gamepad2.dpad_up){
             robot.lift.setPower(1);
         } else if (gamepad2.dpad_down) {
-            robot.lift.setPower(0);
+            robot.lift.setPower(-1);
         } else {
            robot.lift.setPower(0);
         }
