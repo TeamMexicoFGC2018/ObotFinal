@@ -129,10 +129,10 @@ public class OmniTriple extends OpMode {
         }
 
         if (gamepad1.dpad_up) {
-            robot.elevador.setPower(1);
+            robot.elevador.setPower(0.5);
 
         } else if (gamepad1.dpad_down){
-            robot.elevador.setPower(-1);
+            robot.elevador.setPower(-0.5);
 
         } else {
             robot.elevador.setPower(0);
