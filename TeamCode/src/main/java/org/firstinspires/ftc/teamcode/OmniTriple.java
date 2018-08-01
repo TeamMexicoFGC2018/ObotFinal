@@ -128,11 +128,11 @@ public class OmniTriple extends OpMode {
             robot.puerta.setPosition(0);
         }
 
-        if (gamepad1.dpad_up) {
-            robot.elevador.setPower(0.5);
+        if (gamepad2.right_bumper) {
+            robot.elevador.setPower(0.75);
 
-        } else if (gamepad1.dpad_down){
-            robot.elevador.setPower(-0.5);
+        } else if (gamepad2.left_bumper){
+            robot.elevador.setPower(-0.75);
 
         } else {
             robot.elevador.setPower(0);
